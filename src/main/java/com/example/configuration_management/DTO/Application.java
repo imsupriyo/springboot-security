@@ -1,4 +1,4 @@
-package com.example.configuration_management.config;
+package com.example.configuration_management.DTO;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

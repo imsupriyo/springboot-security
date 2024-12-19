@@ -2,7 +2,6 @@ package com.example.configuration_management.controller;
 
 import com.example.configuration_management.DTO.LoginRequestDTO;
 import com.example.configuration_management.DTO.LoginResponseDTO;
-import com.example.configuration_management.config.CustomAuthenticationProvider;
 import com.example.configuration_management.entity.Customer;
 import com.example.configuration_management.repository.CustomerRepository;
 import com.example.configuration_management.security.ApplicationConstant;
@@ -12,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class CustomerController {
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
-    private final CustomAuthenticationProvider authenticationProvider;
+    private final AuthenticationProvider authenticationProvider;
     private final Environment env;
 
     @PostMapping("/register")
@@ -64,7 +64,7 @@ public class CustomerController {
                                 .stream()
                                 .map(GrantedAuthority::getAuthority).collect(Collectors.joining(",")))
                         .issuedAt(new Date())
-                        .expiration(new Date(new Date().getTime() + (5 * 60 * 1000))) // 5 minutes
+                        .expiration(new Date(new Date().getTime() + (5 * 60 * 60 * 1000))) // Expires after 5 hour
                         .signWith(secretKey)
                         .compact();
             }
